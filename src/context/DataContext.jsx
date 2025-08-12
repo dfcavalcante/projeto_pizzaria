@@ -1,10 +1,15 @@
 import React, { useState, useMemo, createContext, useContext } from 'react';
 
 const MOCK_PIZZAS = [
-  { id: 1, nome: 'Margherita', ingredientes: 'Molho de tomate, muçarela, manjericão', tamanhos: { P: 25, M: 35, G: 45 }, imagem: 'insira imagem aqui' },
-  { id: 2, nome: 'Calabresa', ingredientes: 'Molho de tomate, muçarela, calabresa, cebola', tamanhos: { P: 28, M: 38, G: 48 }, imagem: 'insira imagem aqui' },
-  { id: 3, nome: 'Quatro Queijos', ingredientes: 'Molho de tomate, muçarela, provolone, parmesão, gorgonzola', tamanhos: { P: 30, M: 42, G: 55 }, imagem: 'insira imagem aqui' },
-  { id: 4, nome: 'Frango com Catupiry', ingredientes: 'Molho de tomate, muçarela, frango desfiado, catupiry', tamanhos: { P: 29, M: 40, G: 52 }, imagem: 'insira imagem aqui' },
+  // --- Caminhos das imagens atualizados para usar hífens em vez de espaços ---
+  { id: 1, nome: 'Margherita', ingredientes: 'Molho de tomate, muçarela, manjericão', tamanhos: { P: 25, M: 35, G: 45 }, imagem: '/Margherita.png' },
+  { id: 2, nome: 'Calabresa', ingredientes: 'Molho de tomate, muçarela, calabresa, cebola', tamanhos: { P: 28, M: 38, G: 48 }, imagem: '/Calabresa.png' },
+  { id: 3, nome: 'Quatro Queijos', ingredientes: 'Molho de tomate, muçarela, provolone, parmesão, gorgonzola', tamanhos: { P: 30, M: 42, G: 55 }, imagem: '/Quatro-Queijos.png' },
+  { id: 4, nome: 'Frango com Catupiry', ingredientes: 'Molho de tomate, muçarela, frango desfiado, catupiry', tamanhos: { P: 29, M: 40, G: 52 }, imagem: '/Frango-com-Catupiry.png' },
+  { id: 5, nome: 'Portuguesa', ingredientes: 'Molho de tomate, muçarela, presunto, ovo, cebola, azeitona', tamanhos: { P: 32, M: 44, G: 56 }, imagem: '/Portuguesa.png' },
+  { id: 6, nome: 'Lombo com Requeijão', ingredientes: 'Molho de tomate, muçarela, lombo canadense, requeijão cremoso', tamanhos: { P: 33, M: 45, G: 58 }, imagem: '/Lombo-com-Requeijão.png' },
+  { id: 7, nome: 'Pizza de Chocolate', ingredientes: 'Chocolate derretido, granulado', tamanhos: { P: 35, M: 48, G: 60 }, imagem: '/Pizza-de-Chocolate.png' },
+  { id: 8, nome: 'Romeu e Julieta', ingredientes: 'Muçarela, goiabada cremosa', tamanhos: { P: 34, M: 46, G: 59 }, imagem: '/Romeu-e-Julieta.png' },
 ];
 
 export const DataContext = createContext(null);
@@ -27,11 +32,11 @@ export const DataProvider = ({ children }) => {
         setPizzas(prev => prev.filter(p => p.id !== pizzaId));
     };
 
-    const placeOrder = (items, info) => {
+    const placeOrder = (items, details) => {
         const newOrder = {
             id: nextOrderId,
             items,
-            info,
+            details,
             status: 'preparando',
             timestamp: new Date()
         };

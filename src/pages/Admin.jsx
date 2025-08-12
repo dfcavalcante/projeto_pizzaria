@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useData } from '../context/DataContext.jsx';
+import React, { useState, useContext } from 'react';
+import { DataContext } from '../context/DataContext.jsx';
 
-// Componente PizzaFormModal definido localmente
+// Componente PizzaFormModal definido localmente... (código omitido por ser igual)
 const PizzaFormModal = ({ pizza, onSave, onClose }) => {
     const [formData, setFormData] = useState({
         nome: pizza?.nome || '',
@@ -69,13 +69,14 @@ const PizzaFormModal = ({ pizza, onSave, onClose }) => {
     );
 };
 
-// Componente OrderItem definido localmente
+
+// --- COMPONENTE ATUALIZADO AQUI ---
 const OrderItem = ({ order }) => (
     <div className="order-item">
         <div className="order-item-header">
             <div>
                 <h4>Pedido #{order.id}</h4>
-                <p>{order.info.tipo === 'mesa' ? 'Mesa' : 'Entrega'}: {order.info.valor}</p>
+                <p>{order.details.deliveryInfo.tipo === 'mesa' ? 'Mesa' : 'Entrega'}: {order.details.deliveryInfo.valor}</p>
                 <p>{new Date(order.timestamp).toLocaleString()}</p>
             </div>
         </div>
@@ -83,14 +84,17 @@ const OrderItem = ({ order }) => (
             {order.items.map(item => (
                 <p key={`${item.id}-${item.tamanho}`}>{item.quantidade}x {item.nome} ({item.tamanho})</p>
             ))}
-            <p style={{textAlign: 'right', fontWeight: 'bold', textTransform: 'uppercase', marginTop: '10px'}}>Status: {order.status}</p>
+            <p className="order-details-footer">
+                <span>Pagamento: <strong>{order.details.paymentInfo.method}</strong></span>
+                <span>Status: <strong>{order.status}</strong></span>
+            </p>
         </div>
     </div>
 );
 
 
 const Admin = () => {
-    const { pizzas, addPizza, updatePizza, deletePizza, orders } = useData();
+    const { pizzas, addPizza, updatePizza, deletePizza, orders } = useContext(DataContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPizza, setCurrentPizza] = useState(null);
 

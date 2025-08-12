@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext.jsx';
 
 const Login = ({ setRoute }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -20,7 +20,11 @@ const Login = ({ setRoute }) => {
     return (
         <div className="login-page">
             <div className="login-container">
-                <h2>Login na Pizzaria</h2>
+                <div className="login-logo">
+                    <img src="/Logo.png" alt="Logo da Pizzaria" className="login-logo-img" />
+                </div>
+                {/* --- TEXTO ALTERADO AQUI --- */}
+                <h2>Login</h2>
                 <form onSubmit={handleSubmit} className="login-form">
                     {error && <p className="error-message">{error}</p>}
                     <div className="form-group">

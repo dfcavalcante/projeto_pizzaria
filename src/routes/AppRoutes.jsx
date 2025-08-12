@@ -1,6 +1,7 @@
 import React from 'react';
 import ProtectedRoute from './ProtectedRoute.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext.jsx';
 
 // Importando as páginas
 import Login from '../pages/Login.jsx';
@@ -12,7 +13,7 @@ import Carrinho from '../pages/Carrinho.jsx';
 import NotFound from '../pages/NotFound.jsx';
 
 const AppRoutes = ({ route, setRoute }) => {
-    const { user } = useAuth();
+    const { user } = useContext(AuthContext);
 
     if (!user) {
       return <Login setRoute={setRoute} />;
@@ -23,12 +24,15 @@ const AppRoutes = ({ route, setRoute }) => {
             return <ProtectedRoute setRoute={setRoute}><Cardapio /></ProtectedRoute>;
         case 'carrinho':
             return <ProtectedRoute setRoute={setRoute}><Carrinho setRoute={setRoute} /></ProtectedRoute>;
+        
+        {/* --- ROTAS PROTEGIDAS PARA ADMIN --- */}
         case 'cozinha':
-            return <ProtectedRoute setRoute={setRoute}><Cozinha /></ProtectedRoute>;
+            return <ProtectedRoute setRoute={setRoute} role="admin"><Cozinha /></ProtectedRoute>;
         case 'entregas':
-            return <ProtectedRoute setRoute={setRoute}><Entregas /></ProtectedRoute>;
+            return <ProtectedRoute setRoute={setRoute} role="admin"><Entregas /></ProtectedRoute>;
         case 'admin':
             return <ProtectedRoute setRoute={setRoute} role="admin"><Admin /></ProtectedRoute>;
+        
         case 'login':
              return <Login setRoute={setRoute} />;
         default:

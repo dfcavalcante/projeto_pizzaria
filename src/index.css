@@ -41,8 +41,9 @@ body {
   font-weight: bold;
 }
 
-.header-logo svg {
-  margin-right: 0.5rem;
+.header-logo-img {
+  height: 40px;
+  margin-right: 10px;
 }
 
 .header-links, .header-user-section {
@@ -101,6 +102,17 @@ body {
   max-width: 400px;
   text-align: center;
 }
+
+.login-logo {
+  margin-bottom: 1.5rem;
+}
+
+.login-logo-img {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
 
 .login-container h2 {
   margin-bottom: 1.5rem;
@@ -190,13 +202,12 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
+/* --- ESTA É A CLASSE CORRIGIDA --- */
 .pizza-card-image {
-  height: 200px;
-  background-color: #e9ecef;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6c757d;
+  width: 100%;
+  height: 200px; /* Mantém uma altura consistente para todos os cards */
+  object-fit: cover; /* Faz a imagem cobrir a área sem distorcer */
+  display: block;
 }
 
 .pizza-card-body {
@@ -212,6 +223,7 @@ body {
   color: #6c757d;
   font-size: 0.9rem;
   margin-bottom: 1rem;
+  min-height: 54px; /* Garante que os cards tenham a mesma altura */
 }
 
 .pizza-card-footer {
@@ -250,37 +262,16 @@ body {
 }
 
 /* --- Carrinho --- */
-.cart-dropdown {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  width: 350px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
-  color: #212529;
-  padding: 1.5rem;
-  border: 1px solid #dee2e6;
-}
-
-.cart-dropdown h3 {
-  margin-top: 0;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.cart-items-list {
-  max-height: 250px;
-  overflow-y: auto;
-  margin: 1rem 0;
+.cart-page {
+  max-width: 800px;
 }
 
 .cart-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .cart-item p {
@@ -304,22 +295,28 @@ body {
   cursor: pointer;
 }
 
+.cart-summary {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
 .cart-total {
   display: flex;
   justify-content: space-between;
   font-weight: bold;
-  font-size: 1.2rem;
-  padding-top: 1rem;
-  border-top: 1px solid #dee2e6;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .cart-order-form select, .cart-order-form input {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   box-sizing: border-box;
 }
 
@@ -406,6 +403,20 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.admin-section-header h3 {
+    margin: 0;
+}
+
+.admin-section-header button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .admin-list-container {
@@ -511,4 +522,70 @@ body {
 .modal-actions .save-btn {
   background-color: #ffc107;
   color: #212529;
+}
+
+/* --- Seção de Pagamento --- */
+.payment-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.payment-section h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.payment-options {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.payment-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.payment-details {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.card-form input {
+  margin-bottom: 0.75rem;
+}
+
+.card-form .card-form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.pix-details .copy-pix-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.pix-details small {
+  display: block;
+  margin-top: 0.75rem;
+  color: #6c757d;
+}
+
+.order-details-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+    text-transform: capitalize;
 }

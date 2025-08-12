@@ -12,9 +12,10 @@ const PizzaCard = ({ pizza }) => {
 
     return (
         <div className="pizza-card">
-            <div className="pizza-card-image">
-                {pizza.imagem}
-            </div>
+            {/* --- A CORREÇÃO ESTÁ AQUI --- */}
+            {/* Estamos usando a tag <img> para exibir a imagem, em vez de uma <div> */}
+            <img src={pizza.imagem} alt={`Pizza de ${pizza.nome}`} className="pizza-card-image" />
+            
             <div className="pizza-card-body">
                 <h3>{pizza.nome}</h3>
                 <p>{pizza.ingredientes}</p>

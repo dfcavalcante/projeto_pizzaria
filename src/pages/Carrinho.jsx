@@ -5,8 +5,14 @@ import { useData } from '../context/DataContext.jsx';
 const Carrinho = ({ setRoute }) => {
     const { cartItems, removeFromCart, clearCart, total } = useCart();
     const { placeOrder } = useData();
+    
+    // Estado para o formulário de entrega/mesa
     const [orderType, setOrderType] = useState('mesa');
     const [orderInfo, setOrderInfo] = useState('');
+
+    // --- NOVOS ESTADOS PARA O PAGAMENTO ---
+    const [paymentMethod, setPaymentMethod] = useState('loja'); // 'cartao', 'pix', 'loja'
+    const [cardInfo, setCardInfo] = useState({ numero: '', nome: '', validade: '', cvv: '' });
 
     const handlePlaceOrder = () => {
         if (cartItems.length === 0) {
@@ -17,18 +23,31 @@ const Carrinho = ({ setRoute }) => {
             alert(`Por favor, informe o número da ${orderType === 'mesa' ? 'mesa' : 'endereço'}!`);
             return;
         }
+        // Validação simples para cartão
+        if (paymentMethod === 'cartao' && (cardInfo.numero.length < 16 || !cardInfo.nome || !cardInfo.validade || cardInfo.cvv.length < 3)) {
+            alert('Por favor, preencha todos os dados do cartão corretamente.');
+            return;
+        }
 
-        const info = { tipo: orderType, valor: orderInfo };
-        placeOrder(cartItems, info);
-        alert("Pedido enviado para a cozinha!");
+        const orderDetails = {
+            deliveryInfo: { tipo: orderType, valor: orderInfo },
+            paymentInfo: { method: paymentMethod }
+        };
+
+        placeOrder(cartItems, orderDetails);
+        alert("Pedido realizado com sucesso!");
         clearCart();
-        setOrderInfo('');
         setRoute('cardapio'); // Redireciona após o pedido
+    };
+    
+    const handleCardInfoChange = (e) => {
+        const { name, value } = e.target;
+        setCardInfo(prev => ({ ...prev, [name]: value }));
     };
 
     return (
         <div className="container page-container cart-page">
-            <h2 className="page-title">Sua Comanda</h2>
+            <h2 className="page-title">Finalizar Pedido</h2>
             {cartItems.length === 0 ? (
                 <p>Seu carrinho está vazio.</p>
             ) : (
@@ -48,21 +67,68 @@ const Carrinho = ({ setRoute }) => {
                             <span>Total:</span>
                             <span>R$ {total.toFixed(2)}</span>
                         </div>
+
+                        {/* --- SEÇÃO DE ENTREGA --- */}
                         <div className="cart-order-form">
+                            <h3>1. Entrega / Retirada</h3>
                             <select value={orderType} onChange={e => setOrderType(e.target.value)}>
-                                <option value="mesa">Mesa</option>
-                                <option value="entrega">Entrega</option>
+                                <option value="mesa">Consumir na Loja (Mesa)</option>
+                                <option value="entrega">Entrega (Delivery)</option>
                             </select>
                             <input
                                 type="text"
                                 value={orderInfo}
                                 onChange={e => setOrderInfo(e.target.value)}
-                                placeholder={orderType === 'mesa' ? 'Número da Mesa' : 'Endereço de Entrega'}
+                                placeholder={orderType === 'mesa' ? 'Número da Mesa' : 'Seu Endereço Completo'}
                             />
-                            <button onClick={handlePlaceOrder} className="cart-order-button">
-                                Enviar Pedido
-                            </button>
                         </div>
+
+                        {/* --- SEÇÃO DE PAGAMENTO --- */}
+                        <div className="payment-section">
+                            <h3>2. Forma de Pagamento</h3>
+                            <div className="payment-options">
+                                <label>
+                                    <input type="radio" name="payment" value="loja" checked={paymentMethod === 'loja'} onChange={() => setPaymentMethod('loja')} />
+                                    Pagar na Loja
+                                </label>
+                                <label>
+                                    <input type="radio" name="payment" value="pix" checked={paymentMethod === 'pix'} onChange={() => setPaymentMethod('pix')} />
+                                    PIX
+                                </label>
+                                <label>
+                                    <input type="radio" name="payment" value="cartao" checked={paymentMethod === 'cartao'} onChange={() => setPaymentMethod('cartao')} />
+                                    Cartão de Crédito
+                                </label>
+                            </div>
+
+                            {/* Detalhes do Pagamento Condicional */}
+                            {paymentMethod === 'cartao' && (
+                                <div className="payment-details card-form">
+                                    <input type="text" name="numero" placeholder="Número do Cartão" value={cardInfo.numero} onChange={handleCardInfoChange} maxLength="16" />
+                                    <input type="text" name="nome" placeholder="Nome no Cartão" value={cardInfo.nome} onChange={handleCardInfoChange} />
+                                    <div className="card-form-row">
+                                        <input type="text" name="validade" placeholder="Validade (MM/AA)" value={cardInfo.validade} onChange={handleCardInfoChange} maxLength="5" />
+                                        <input type="text" name="cvv" placeholder="CVV" value={cardInfo.cvv} onChange={handleCardInfoChange} maxLength="4" />
+                                    </div>
+                                </div>
+                            )}
+                            {paymentMethod === 'pix' && (
+                                <div className="payment-details pix-details">
+                                    <p>Chave PIX (CNPJ): <strong>01.234.567/0001-89</strong></p>
+                                    <button onClick={() => navigator.clipboard.writeText('01.234.567/0001-89')} className="copy-pix-button">Copiar Chave</button>
+                                    <small>Após o pagamento, seu pedido será confirmado.</small>
+                                </div>
+                            )}
+                            {paymentMethod === 'loja' && (
+                                <div className="payment-details">
+                                    <p>Você pagará diretamente no caixa ao retirar ou na mesa.</p>
+                                </div>
+                            )}
+                        </div>
+
+                        <button onClick={handlePlaceOrder} className="cart-order-button">
+                            Finalizar Pedido
+                        </button>
                     </div>
                 </div>
             )}
