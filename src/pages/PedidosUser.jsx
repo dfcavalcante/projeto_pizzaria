@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthProvider.jsx';
 
 // Mapeamento de status para textos mais amigáveis
 const statusText = {
+    analise: 'Seu pedido está em análise pelo restaurante.',
     preparando: 'Seu pedido está sendo preparado!',
     pronto: 'Seu pedido está pronto para retirada/entrega!',
     entregue: 'Seu pedido foi entregue!',
@@ -31,7 +32,6 @@ const PedidosUser = () => {
                             ))}
                         </div>
                         <div className="order-item-user-footer">
-                            {/* --- LÓGICA DE STATUS SIMPLIFICADA AQUI --- */}
                             <p className="status-text">
                                 <strong>Status:</strong> {statusText[order.status] || 'Status desconhecido'}
                             </p>

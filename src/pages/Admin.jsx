@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext.jsx';
+import { useNotification } from '../context/NotificationContext.jsx';
 
-// Componente PizzaFormModal definido localmente... (código omitido por ser igual)
-const PizzaFormModal = ({ pizza, onSave, onClose }) => {
+// O componente PizzaFormModal para ADICIONAR novas pizzas continua o mesmo
+const PizzaFormModal = ({ onSave, onClose }) => {
     const [formData, setFormData] = useState({
-        nome: pizza?.nome || '',
-        ingredientes: pizza?.ingredientes || '',
-        tamanhos: {
-            P: pizza?.tamanhos?.P || 0,
-            M: pizza?.tamanhos?.M || 0,
-            G: pizza?.tamanhos?.G || 0,
-        },
-        imagem: pizza?.imagem || 'insira imagem aqui'
+        nome: '',
+        ingredientes: '',
+        tamanhos: { P: 0, M: 0, G: 0 },
+        imagem: '/placeholder.png' // Imagem padrão para novas pizzas
     });
 
     const handleChange = (e) => {
@@ -35,7 +32,7 @@ const PizzaFormModal = ({ pizza, onSave, onClose }) => {
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h2>{pizza ? 'Editar Pizza' : 'Nova Pizza'}</h2>
+                <h2>Nova Pizza</h2>
                 <form onSubmit={handleSubmit} className="modal-form">
                     <div className="form-group">
                         <label>Nome</label>
@@ -69,58 +66,69 @@ const PizzaFormModal = ({ pizza, onSave, onClose }) => {
     );
 };
 
-
-// --- COMPONENTE ATUALIZADO (E-MAIL REMOVIDO DA EXIBIÇÃO) ---
-const OrderItem = ({ order }) => (
-    <div className="order-item">
-        <div className="order-item-header">
-            <div>
-                <h4>Pedido #{order.id}</h4>
-                <p>{order.details.deliveryInfo.tipo === 'mesa' ? 'Mesa' : 'Entrega'}: {order.details.deliveryInfo.valor}</p>
-                <p>{new Date(order.timestamp).toLocaleString()}</p>
-            </div>
-        </div>
-        <div className="order-item-body">
-            {order.items.map(item => (
-                <p key={`${item.id}-${item.tamanho}`}>{item.quantidade}x {item.nome} ({item.tamanho})</p>
-            ))}
-            <p className="order-details-footer">
-                <span>Pagamento: <strong>{order.details.paymentInfo.method}</strong></span>
-                <span>Status: <strong>{order.status}</strong></span>
-            </p>
-        </div>
-    </div>
-);
-
-
 const Admin = () => {
     const { pizzas, addPizza, updatePizza, deletePizza, orders } = useData();
+    const { showNotification } = useNotification();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentPizza, setCurrentPizza] = useState(null);
+    
+    // Estado local para gerenciar as edições de preço antes de salvar
+    const [editablePizzas, setEditablePizzas] = useState([]);
 
-    const openModalForNew = () => {
-        setCurrentPizza(null);
-        setIsModalOpen(true);
+    useEffect(() => {
+        // Clona as pizzas do contexto para o estado local para permitir edição
+        setEditablePizzas(JSON.parse(JSON.stringify(pizzas)));
+    }, [pizzas]);
+
+    const handlePriceChange = (pizzaId, size, value) => {
+        setEditablePizzas(currentPizzas => 
+            currentPizzas.map(p => {
+                if (p.id === pizzaId) {
+                    return {
+                        ...p,
+                        tamanhos: { ...p.tamanhos, [size]: parseFloat(value) || 0 }
+                    };
+                }
+                return p;
+            })
+        );
     };
 
-    const openModalForEdit = (pizza) => {
-        setCurrentPizza(pizza);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setCurrentPizza(null);
-    };
-
-    const handleSavePizza = (pizzaData) => {
-        if (currentPizza) {
-            updatePizza({ ...currentPizza, ...pizzaData });
-        } else {
-            addPizza(pizzaData);
+    const handleSaveChanges = (pizzaId) => {
+        const pizzaToUpdate = editablePizzas.find(p => p.id === pizzaId);
+        if (pizzaToUpdate) {
+            updatePizza(pizzaToUpdate);
+            showNotification('Preços atualizados com sucesso!', 'success');
         }
-        closeModal();
     };
+
+    const handleAddNewPizza = (pizzaData) => {
+        addPizza(pizzaData);
+        showNotification('Nova pizza adicionada ao cardápio!', 'success');
+        setIsModalOpen(false);
+    };
+
+    // --- COMPONENTE CORRIGIDO AQUI ---
+    // Adicionado "optional chaining" (?.) para evitar erros se 'order.details' não existir
+    const OrderItem = ({ order }) => (
+        <div className="order-item">
+            <div className="order-item-header">
+                <div>
+                    <h4>Pedido #{order.id}</h4>
+                    <p>{order.details?.deliveryInfo?.tipo === 'mesa' ? 'Mesa' : 'Entrega'}: {order.details?.deliveryInfo?.valor}</p>
+                    <p>{new Date(order.timestamp).toLocaleString()}</p>
+                </div>
+            </div>
+            <div className="order-item-body">
+                {order.items.map(item => (
+                    <p key={`${item.id}-${item.tamanho}`}>{item.quantidade}x {item.nome} ({item.tamanho})</p>
+                ))}
+                <p className="order-details-footer">
+                    <span>Pagamento: <strong>{order.details?.paymentInfo?.method}</strong></span>
+                    <span>Status: <strong>{order.status}</strong></span>
+                </p>
+            </div>
+        </div>
+    );
 
     return (
         <div className="container page-container">
@@ -129,15 +137,20 @@ const Admin = () => {
             <div className="admin-section">
                 <div className="admin-section-header">
                     <h3>Gerenciar Cardápio</h3>
-                    <button onClick={openModalForNew}>Adicionar Pizza</button>
+                    <button onClick={() => setIsModalOpen(true)}>Adicionar Pizza</button>
                 </div>
                 <div className="admin-list-container">
-                    {pizzas.map(pizza => (
-                        <div key={pizza.id} className="admin-list-item">
-                            <span>{pizza.nome}</span>
-                            <div>
-                                <button onClick={() => openModalForEdit(pizza)} className="edit-btn">Editar</button>
-                                <button onClick={() => {if(window.confirm('Tem certeza que deseja excluir esta pizza?')) deletePizza(pizza.id)}} className="delete-btn">Excluir</button>
+                    {editablePizzas.map(pizza => (
+                        <div key={pizza.id} className="admin-pizza-item">
+                            <span className="pizza-name">{pizza.nome}</span>
+                            <div className="price-inputs">
+                                <label>P: R$ <input type="number" value={pizza.tamanhos.P} onChange={(e) => handlePriceChange(pizza.id, 'P', e.target.value)} className="admin-price-input" /></label>
+                                <label>M: R$ <input type="number" value={pizza.tamanhos.M} onChange={(e) => handlePriceChange(pizza.id, 'M', e.target.value)} className="admin-price-input" /></label>
+                                <label>G: R$ <input type="number" value={pizza.tamanhos.G} onChange={(e) => handlePriceChange(pizza.id, 'G', e.target.value)} className="admin-price-input" /></label>
+                            </div>
+                            <div className="pizza-actions">
+                                <button onClick={() => handleSaveChanges(pizza.id)} className="admin-save-btn">Salvar</button>
+                                <button onClick={() => {if(window.confirm('Tem certeza?')) deletePizza(pizza.id)}} className="delete-btn">Excluir</button>
                             </div>
                         </div>
                     ))}
@@ -150,14 +163,14 @@ const Admin = () => {
                 </div>
                 <div className="admin-list-container">
                     {orders.length > 0 ? (
-                        orders.map(order => <OrderItem key={order.id} order={order} />)
+                        orders.slice().reverse().map(order => <OrderItem key={order.id} order={order} />)
                     ) : (
                         <p>Nenhum pedido no histórico.</p>
                     )}
                 </div>
             </div>
 
-            {isModalOpen && <PizzaFormModal pizza={currentPizza} onSave={handleSavePizza} onClose={closeModal} />}
+            {isModalOpen && <PizzaFormModal onSave={handleAddNewPizza} onClose={() => setIsModalOpen(false)} />}
         </div>
     );
 };

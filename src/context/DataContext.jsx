@@ -1,4 +1,4 @@
-import React, { useState, useMemo, createContext, useContext } from 'react';
+import React, { useState, useMemo, createContext, useContext, useEffect } from 'react';
 
 const MOCK_PIZZAS = [
   { id: 1, nome: 'Margherita', ingredientes: 'Molho de tomate, muçarela, manjericão', tamanhos: { P: 25, M: 35, G: 45 }, imagem: '/Margherita.png' },
@@ -15,8 +15,24 @@ export const DataContext = createContext(null);
 
 export const DataProvider = ({ children }) => {
     const [pizzas, setPizzas] = useState(MOCK_PIZZAS);
-    const [orders, setOrders] = useState([]);
-    const [nextOrderId, setNextOrderId] = useState(1);
+
+    const [orders, setOrders] = useState(() => {
+        const savedOrders = localStorage.getItem('pizzaria_orders');
+        return savedOrders ? JSON.parse(savedOrders) : [];
+    });
+
+    const [nextOrderId, setNextOrderId] = useState(() => {
+        const savedId = localStorage.getItem('pizzaria_nextOrderId');
+        return savedId ? parseInt(savedId, 10) : 1;
+    });
+
+    useEffect(() => {
+        localStorage.setItem('pizzaria_orders', JSON.stringify(orders));
+    }, [orders]);
+
+    useEffect(() => {
+        localStorage.setItem('pizzaria_nextOrderId', nextOrderId);
+    }, [nextOrderId]);
 
     const addPizza = (pizzaData) => {
         const newPizza = { ...pizzaData, id: pizzas.length > 0 ? Math.max(...pizzas.map(p => p.id)) + 1 : 1 };
@@ -31,14 +47,14 @@ export const DataProvider = ({ children }) => {
         setPizzas(prev => prev.filter(p => p.id !== pizzaId));
     };
 
-    // --- ESTA É A FUNÇÃO CORRIGIDA ---
     const placeOrder = (items, details, userEmail) => {
         const newOrder = {
             id: nextOrderId,
-            userEmail, // Agora o email é salvo no pedido
+            userEmail,
             items,
             details,
-            status: 'preparando',
+            // --- STATUS INICIAL ALTERADO AQUI ---
+            status: 'analise', // analise -> preparando -> pronto -> entregue
             timestamp: new Date()
         };
         setOrders(prev => [...prev, newOrder]);
@@ -52,7 +68,7 @@ export const DataProvider = ({ children }) => {
     const dataContextValue = useMemo(() => ({
         pizzas, addPizza, updatePizza, deletePizza,
         orders, placeOrder, updateOrderStatus
-    }), [pizzas, orders]);
+    }), [pizzas, orders, nextOrderId]);
 
     return (
         <DataContext.Provider value={dataContextValue}>

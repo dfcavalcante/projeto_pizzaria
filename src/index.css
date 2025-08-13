@@ -664,3 +664,75 @@ body {
     font-size: 1.1rem;
     text-align: center;
 }
+
+/* --- Estilos para Edição de Preços no Admin --- */
+.admin-pizza-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-pizza-item:last-child {
+  border-bottom: none;
+}
+
+.admin-pizza-item .pizza-name {
+  font-weight: bold;
+  flex-grow: 1;
+  min-width: 150px;
+}
+
+.admin-pizza-item .price-inputs {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-pizza-item .price-inputs label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.admin-price-input {
+  width: 60px;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.admin-pizza-item .pizza-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-save-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: #dc3545;
+}
+
+/* --- Estilo para o botão de aceitar pedido --- */
+.order-item-button.accept {
+  background-color: #28a745; /* Verde */
+}
+
+.order-item-button.accept:hover {
+  background-color: #218838;
+}
