@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext.jsx';
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthProvider.jsx'; // Importação corrigida
 
 const Login = ({ setRoute }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useContext(AuthContext);
+    const { login } = useAuth(); // Usando o hook customizado
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -23,7 +23,6 @@ const Login = ({ setRoute }) => {
                 <div className="login-logo">
                     <img src="/Logo.png" alt="Logo da Pizzaria" className="login-logo-img" />
                 </div>
-                {/* --- TEXTO ALTERADO AQUI --- */}
                 <h2>Login</h2>
                 <form onSubmit={handleSubmit} className="login-form">
                     {error && <p className="error-message">{error}</p>}

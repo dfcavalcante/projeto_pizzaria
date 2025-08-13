@@ -84,14 +84,18 @@ body {
   justify-content: center;
 }
 
-/* --- Página de Login --- */
+/* --- Página de Login (COM IMAGEM DE FUNDO) --- */
 .login-page {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f1f1f1;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/tela-de-fundo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
 
 .login-container {
   background: white;
@@ -202,11 +206,10 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* --- ESTA É A CLASSE CORRIGIDA --- */
 .pizza-card-image {
   width: 100%;
-  height: 200px; /* Mantém uma altura consistente para todos os cards */
-  object-fit: cover; /* Faz a imagem cobrir a área sem distorcer */
+  height: 200px;
+  object-fit: cover;
   display: block;
 }
 
@@ -223,7 +226,7 @@ body {
   color: #6c757d;
   font-size: 0.9rem;
   margin-bottom: 1rem;
-  min-height: 54px; /* Garante que os cards tenham a mesma altura */
+  min-height: 54px;
 }
 
 .pizza-card-footer {
@@ -588,4 +591,76 @@ body {
     border-top: 1px solid #eee;
     font-size: 0.9rem;
     text-transform: capitalize;
+}
+
+/* --- Estilos para Notificação --- */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  animation: fadeInDown 0.5s ease-out;
+}
+
+.notification.success {
+  background-color: #28a745; /* Verde */
+}
+
+.notification.error {
+  background-color: #dc3545; /* Vermelho */
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -30px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* --- Estilos para a página Meus Pedidos --- */
+.order-item-user {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+}
+
+.order-item-user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.order-item-user-header h4 {
+  margin: 0;
+}
+
+.order-item-user-header span {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.order-item-user-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.status-text {
+    font-size: 1.1rem;
+    text-align: center;
 }

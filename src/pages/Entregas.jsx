@@ -1,5 +1,5 @@
-import React from 'react';
-import { useData } from '../context/DataContext.jsx';
+import React, { useContext } from 'react';
+import { DataContext } from '../context/DataContext.jsx';
 
 // Componente OrderItem definido localmente
 const OrderItem = ({ order, onStatusChange, actionText }) => (
@@ -7,7 +7,7 @@ const OrderItem = ({ order, onStatusChange, actionText }) => (
         <div className="order-item-header">
             <div>
                 <h4>Pedido #{order.id}</h4>
-                <p>{order.info.tipo === 'mesa' ? 'Mesa' : 'Entrega'}: {order.info.valor}</p>
+                <p>{order.details.deliveryInfo.tipo === 'mesa' ? 'Mesa' : 'Entrega'}: {order.details.deliveryInfo.valor}</p>
                 <p>{new Date(order.timestamp).toLocaleTimeString()}</p>
             </div>
             {onStatusChange && actionText && (
@@ -28,7 +28,7 @@ const OrderItem = ({ order, onStatusChange, actionText }) => (
 );
 
 const Entregas = () => {
-    const { orders, updateOrderStatus } = useData();
+    const { orders, updateOrderStatus } = useContext(DataContext);
     const pedidosProntos = orders.filter(o => o.status === 'pronto');
 
     return (
@@ -41,7 +41,8 @@ const Entregas = () => {
                             key={order.id}
                             order={order}
                             onStatusChange={() => updateOrderStatus(order.id, 'entregue')}
-                            actionText={order.info.tipo === 'mesa' ? 'Servido' : 'Entregue'}
+                            // --- ESTA LINHA FOI CORRIGIDA ---
+                            actionText={order.details.deliveryInfo.tipo === 'mesa' ? 'Servido' : 'Entregue'}
                         />
                     ))}
                 </div>

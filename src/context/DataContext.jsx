@@ -1,7 +1,6 @@
 import React, { useState, useMemo, createContext, useContext } from 'react';
 
 const MOCK_PIZZAS = [
-  // --- Caminhos das imagens atualizados para usar hífens em vez de espaços ---
   { id: 1, nome: 'Margherita', ingredientes: 'Molho de tomate, muçarela, manjericão', tamanhos: { P: 25, M: 35, G: 45 }, imagem: '/Margherita.png' },
   { id: 2, nome: 'Calabresa', ingredientes: 'Molho de tomate, muçarela, calabresa, cebola', tamanhos: { P: 28, M: 38, G: 48 }, imagem: '/Calabresa.png' },
   { id: 3, nome: 'Quatro Queijos', ingredientes: 'Molho de tomate, muçarela, provolone, parmesão, gorgonzola', tamanhos: { P: 30, M: 42, G: 55 }, imagem: '/Quatro-Queijos.png' },
@@ -32,9 +31,11 @@ export const DataProvider = ({ children }) => {
         setPizzas(prev => prev.filter(p => p.id !== pizzaId));
     };
 
-    const placeOrder = (items, details) => {
+    // --- ESTA É A FUNÇÃO CORRIGIDA ---
+    const placeOrder = (items, details, userEmail) => {
         const newOrder = {
             id: nextOrderId,
+            userEmail, // Agora o email é salvo no pedido
             items,
             details,
             status: 'preparando',

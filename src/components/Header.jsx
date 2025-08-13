@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext.jsx';
+import React from 'react';
+import { useAuth } from '../context/AuthProvider.jsx';
 import { useCart } from '../context/CartContext.jsx';
 
 // Ícones
@@ -8,7 +8,7 @@ const UserIcon = () => <svg width="24" height="24" fill="none" viewBox="0 0 24 2
 const LogoutIcon = () => <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>;
 
 const Header = ({ setRoute }) => {
-    const { user, logout } = useContext(AuthContext);
+    const { user, logout } = useAuth();
     const { cartItems } = useCart();
 
     const handleLogout = () => {
@@ -29,8 +29,9 @@ const Header = ({ setRoute }) => {
                     {user && (
                         <>
                             <button onClick={() => setRoute('cardapio')}>Cardápio</button>
+                            <button onClick={() => setRoute('pedidos-user')}>Meus Pedidos</button>
                             
-                            {/* --- LÓGICA DE RESTRIÇÃO ADICIONADA AQUI --- */}
+                            {/* --- LÓGICA CORRIGIDA --- */}
                             {user.role === 'admin' && (
                                 <>
                                     <button onClick={() => setRoute('cozinha')}>Cozinha</button>

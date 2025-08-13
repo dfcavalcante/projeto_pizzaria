@@ -5,14 +5,17 @@ import './index.css';
 
 import { AuthProvider } from './context/AuthProvider.jsx';
 import { DataProvider } from './context/DataContext.jsx';
-import { CartProvider } from './context/CartContext.jsx'; // Importação crucial
+import { CartProvider } from './context/CartContext.jsx';
+import { NotificationProvider } from './context/NotificationContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <DataProvider>
-        <CartProvider> {/* O CartProvider deve envolver o App */}
-          <App />
+        <CartProvider>
+          <NotificationProvider> {/* Adicionado aqui */}
+            <App />
+          </NotificationProvider>
         </CartProvider>
       </DataProvider>
     </AuthProvider>

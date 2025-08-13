@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header.jsx';
 import AppRoutes from './routes/AppRoutes.jsx';
-import { useAuth } from './context/AuthContext.jsx';
+import Notification from './components/Notification.jsx';
+import { useAuth } from './context/AuthProvider.jsx'; // Importação corrigida
 
 function App() {
-    // Simulação do React Router
     const [route, setRoute] = useState('login');
-    const { user } = useAuth();
+    const { user } = useAuth(); // Usando o hook customizado
 
-    // Efeito para lidar com a mudança de rota e proteção
     useEffect(() => {
         if (!user) {
             setRoute('login');
@@ -19,6 +18,7 @@ function App() {
 
     return (
         <div className="app">
+            <Notification />
             {user && <Header setRoute={setRoute} />}
             <main>
                 <AppRoutes route={route} setRoute={setRoute} />

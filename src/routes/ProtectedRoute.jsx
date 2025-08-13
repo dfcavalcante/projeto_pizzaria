@@ -1,12 +1,10 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthProvider.jsx'; // Importação corrigida
 
 const ProtectedRoute = ({ children, role, setRoute }) => {
-    const { user } = useAuth();
+    const { user } = useAuth(); // Usando o hook customizado
 
     if (!user) {
-        // Em uma app real com React Router, usaríamos <Navigate to="/login" />
-        // Aqui, forçamos a rota de login.
         setTimeout(() => setRoute('login'), 0);
         return <p>Redirecionando para o login...</p>;
     }

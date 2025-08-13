@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { AuthContext } from './AuthContext.jsx';
+import React, { useState, useEffect, useMemo, useContext, createContext } from 'react';
+
+// 1. O contexto é criado aqui dentro
+const AuthContext = createContext(null);
 
 const MOCK_USERS = [
     { id: 1, email: 'cliente@pizzaria.com', password: '123', role: 'cliente' },
     { id: 2, email: 'admin@pizzaria.com', password: 'admin', role: 'admin' },
 ];
 
+// 2. O provedor continua como antes
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -40,3 +43,6 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
+// 3. O hook customizado é exportado daqui, sendo a única fonte de acesso
+export const useAuth = () => useContext(AuthContext);

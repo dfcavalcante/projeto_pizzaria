@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { useData } from '../context/DataContext.jsx';
+import { useNotification } from '../context/NotificationContext.jsx';
+import { useAuth } from '../context/AuthProvider.jsx'; // Importação corrigida
 
 const Carrinho = ({ setRoute }) => {
     const { cartItems, removeFromCart, clearCart, total } = useCart();
     const { placeOrder } = useData();
+    const { showNotification } = useNotification();
+    const { user } = useAuth(); // Usando o hook centralizado
     
-    // Estado para o formulário de entrega/mesa
     const [orderType, setOrderType] = useState('mesa');
     const [orderInfo, setOrderInfo] = useState('');
-
-    // --- NOVOS ESTADOS PARA O PAGAMENTO ---
-    const [paymentMethod, setPaymentMethod] = useState('loja'); // 'cartao', 'pix', 'loja'
+    const [paymentMethod, setPaymentMethod] = useState('loja');
     const [cardInfo, setCardInfo] = useState({ numero: '', nome: '', validade: '', cvv: '' });
 
     const handlePlaceOrder = () => {
         if (cartItems.length === 0) {
-            alert("Seu carrinho está vazio!");
+            showNotification("Seu carrinho está vazio!", 'error');
             return;
         }
         if (!orderInfo) {
-            alert(`Por favor, informe o número da ${orderType === 'mesa' ? 'mesa' : 'endereço'}!`);
+            showNotification(`Por favor, informe o ${orderType === 'mesa' ? 'número da mesa' : 'endereço'}!`, 'error');
             return;
         }
-        // Validação simples para cartão
         if (paymentMethod === 'cartao' && (cardInfo.numero.length < 16 || !cardInfo.nome || !cardInfo.validade || cardInfo.cvv.length < 3)) {
-            alert('Por favor, preencha todos os dados do cartão corretamente.');
+            showNotification('Preencha todos os dados do cartão.', 'error');
             return;
         }
 
@@ -34,10 +34,11 @@ const Carrinho = ({ setRoute }) => {
             paymentInfo: { method: paymentMethod }
         };
 
-        placeOrder(cartItems, orderDetails);
-        alert("Pedido realizado com sucesso!");
+        placeOrder(cartItems, orderDetails, user.email);
+        
+        showNotification("Pedido realizado com sucesso!", 'success');
         clearCart();
-        setRoute('cardapio'); // Redireciona após o pedido
+        setRoute('pedidos-user');
     };
     
     const handleCardInfoChange = (e) => {
@@ -48,6 +49,7 @@ const Carrinho = ({ setRoute }) => {
     return (
         <div className="container page-container cart-page">
             <h2 className="page-title">Finalizar Pedido</h2>
+            {/* O resto do JSX permanece o mesmo... */}
             {cartItems.length === 0 ? (
                 <p>Seu carrinho está vazio.</p>
             ) : (
@@ -67,8 +69,6 @@ const Carrinho = ({ setRoute }) => {
                             <span>Total:</span>
                             <span>R$ {total.toFixed(2)}</span>
                         </div>
-
-                        {/* --- SEÇÃO DE ENTREGA --- */}
                         <div className="cart-order-form">
                             <h3>1. Entrega / Retirada</h3>
                             <select value={orderType} onChange={e => setOrderType(e.target.value)}>
@@ -82,8 +82,6 @@ const Carrinho = ({ setRoute }) => {
                                 placeholder={orderType === 'mesa' ? 'Número da Mesa' : 'Seu Endereço Completo'}
                             />
                         </div>
-
-                        {/* --- SEÇÃO DE PAGAMENTO --- */}
                         <div className="payment-section">
                             <h3>2. Forma de Pagamento</h3>
                             <div className="payment-options">
@@ -100,8 +98,6 @@ const Carrinho = ({ setRoute }) => {
                                     Cartão de Crédito
                                 </label>
                             </div>
-
-                            {/* Detalhes do Pagamento Condicional */}
                             {paymentMethod === 'cartao' && (
                                 <div className="payment-details card-form">
                                     <input type="text" name="numero" placeholder="Número do Cartão" value={cardInfo.numero} onChange={handleCardInfoChange} maxLength="16" />
@@ -115,7 +111,10 @@ const Carrinho = ({ setRoute }) => {
                             {paymentMethod === 'pix' && (
                                 <div className="payment-details pix-details">
                                     <p>Chave PIX (CNPJ): <strong>01.234.567/0001-89</strong></p>
-                                    <button onClick={() => navigator.clipboard.writeText('01.234.567/0001-89')} className="copy-pix-button">Copiar Chave</button>
+                                    <button onClick={() => {
+                                        navigator.clipboard.writeText('01.234.567/0001-89');
+                                        showNotification('Chave PIX copiada!', 'success');
+                                    }} className="copy-pix-button">Copiar Chave</button>
                                     <small>Após o pagamento, seu pedido será confirmado.</small>
                                 </div>
                             )}
@@ -125,7 +124,6 @@ const Carrinho = ({ setRoute }) => {
                                 </div>
                             )}
                         </div>
-
                         <button onClick={handlePlaceOrder} className="cart-order-button">
                             Finalizar Pedido
                         </button>

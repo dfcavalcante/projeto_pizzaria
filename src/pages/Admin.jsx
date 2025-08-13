@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { DataContext } from '../context/DataContext.jsx';
+import React, { useState } from 'react';
+import { useData } from '../context/DataContext.jsx';
 
 // Componente PizzaFormModal definido localmente... (código omitido por ser igual)
 const PizzaFormModal = ({ pizza, onSave, onClose }) => {
@@ -70,7 +70,7 @@ const PizzaFormModal = ({ pizza, onSave, onClose }) => {
 };
 
 
-// --- COMPONENTE ATUALIZADO AQUI ---
+// --- COMPONENTE ATUALIZADO (E-MAIL REMOVIDO DA EXIBIÇÃO) ---
 const OrderItem = ({ order }) => (
     <div className="order-item">
         <div className="order-item-header">
@@ -94,7 +94,7 @@ const OrderItem = ({ order }) => (
 
 
 const Admin = () => {
-    const { pizzas, addPizza, updatePizza, deletePizza, orders } = useContext(DataContext);
+    const { pizzas, addPizza, updatePizza, deletePizza, orders } = useData();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPizza, setCurrentPizza] = useState(null);
 

@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext.jsx';
+import { useNotification } from '../context/NotificationContext.jsx'; // Importar o hook
 
 const PizzaCard = ({ pizza }) => {
     const { addToCart } = useCart();
+    const { showNotification } = useNotification(); // Usar o hook
     const [selectedSize, setSelectedSize] = useState('M');
 
     const handleAddToCart = () => {
         addToCart(pizza, selectedSize);
-        alert(`${pizza.nome} (${selectedSize}) adicionada ao carrinho!`);
+        // --- alert() substituído aqui ---
+        showNotification(`${pizza.nome} adicionada ao carrinho!`, 'success');
     };
 
     return (
         <div className="pizza-card">
-            {/* --- A CORREÇÃO ESTÁ AQUI --- */}
-            {/* Estamos usando a tag <img> para exibir a imagem, em vez de uma <div> */}
             <img src={pizza.imagem} alt={`Pizza de ${pizza.nome}`} className="pizza-card-image" />
             
             <div className="pizza-card-body">
