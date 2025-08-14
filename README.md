@@ -1,5 +1,4 @@
-Manaus Pizza - Sistema de Gestão para Pizzarias
-Aplicação front-end em React que simula um sistema de gestão para uma pizzaria, com funcionalidades para clientes e administradores.
+Manaus Pizza - Aplicação front-end em React que simula um sistema de gestão de uma pizzaria, com funcionalidades para clientes e administradores.
 
 ```mermaid
 graph TD
