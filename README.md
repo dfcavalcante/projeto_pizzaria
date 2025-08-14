@@ -1,6 +1,7 @@
 Manaus Pizza - Sistema de Gestão para Pizzarias
 Aplicação front-end em React que simula um sistema de gestão para uma pizzaria, com funcionalidades para clientes e administradores.
 
+```mermaid
 graph TD
     A[Início] --> B{Tela de Login};
     B -- Credenciais de Cliente --> C[Área do Cliente];
@@ -24,3 +25,4 @@ graph TD
         D --> D7[Gerenciar Cardápio];
         D7 --> D8[Adicionar/Editar/Excluir Pizzas];
     end
+```
