@@ -53,7 +53,6 @@ export const DataProvider = ({ children }) => {
             userEmail,
             items,
             details,
-            // --- STATUS INICIAL ALTERADO AQUI ---
             status: 'analise', // analise -> preparando -> pronto -> entregue
             timestamp: new Date()
         };

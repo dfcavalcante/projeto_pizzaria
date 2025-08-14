@@ -41,7 +41,6 @@ const Entregas = () => {
                             key={order.id}
                             order={order}
                             onStatusChange={() => updateOrderStatus(order.id, 'entregue')}
-                            // --- ESTA LINHA FOI CORRIGIDA ---
                             actionText={order.details.deliveryInfo.tipo === 'mesa' ? 'Servido' : 'Entregue'}
                         />
                     ))}

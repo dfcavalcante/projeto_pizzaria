@@ -25,7 +25,6 @@ const AppRoutes = ({ route, setRoute }) => {
         case 'carrinho':
             return <ProtectedRoute setRoute={setRoute}><Carrinho setRoute={setRoute} /></ProtectedRoute>;
         
-        // --- RESTRIÇÃO REMOVIDA DAQUI ---
         case 'pedidos-user':
             return <ProtectedRoute setRoute={setRoute}><PedidosUser /></ProtectedRoute>;
         

@@ -9,7 +9,6 @@ const PizzaCard = ({ pizza }) => {
 
     const handleAddToCart = () => {
         addToCart(pizza, selectedSize);
-        // --- alert() substituído aqui ---
         showNotification(`${pizza.nome} adicionada ao carrinho!`, 'success');
     };
 

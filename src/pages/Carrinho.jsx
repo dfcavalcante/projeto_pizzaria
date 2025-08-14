@@ -59,7 +59,7 @@ const Carrinho = ({ setRoute }) => {
                                 <p className="item-name">{item.nome} ({item.tamanho})</p>
                                 <p className="item-details">R$ {item.preco.toFixed(2)} / un.</p>
                             </div>
-                            {/* --- CONTROLE DE QUANTIDADE ADICIONADO AQUI --- */}
+                            {/*CONTROLE DE QUANTIDADE*/}
                             <div className="quantity-control">
                                 <button onClick={() => decreaseQuantity(item.id, item.tamanho)} className="quantity-btn">-</button>
                                 <span className="quantity-text">{item.quantidade}</span>
@@ -70,7 +70,7 @@ const Carrinho = ({ setRoute }) => {
                     ))}
 
                     <div className="cart-summary">
-                        {/* O resto do JSX permanece o mesmo... */}
+                        {}
                         <div className="cart-total">
                             <span>Total:</span>
                             <span>R$ {total.toFixed(2)}</span>

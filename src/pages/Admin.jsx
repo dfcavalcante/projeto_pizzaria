@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext.jsx';
 import { useNotification } from '../context/NotificationContext.jsx';
 
-// O componente PizzaFormModal para ADICIONAR novas pizzas continua o mesmo
 const PizzaFormModal = ({ onSave, onClose }) => {
     const [formData, setFormData] = useState({
         nome: '',
@@ -107,8 +106,7 @@ const Admin = () => {
         setIsModalOpen(false);
     };
 
-    // --- COMPONENTE CORRIGIDO AQUI ---
-    // Adicionado "optional chaining" (?.) para evitar erros se 'order.details' não existir
+    // "optional chaining" (?.) para evitar erros se 'order.details' não existir
     const OrderItem = ({ order }) => (
         <div className="order-item">
             <div className="order-item-header">

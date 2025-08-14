@@ -27,7 +27,7 @@ const AppLayout = () => {
       <Notification />
       <Header />
       <main>
-        <Outlet /> {/* As páginas das rotas serão renderizadas aqui */}
+        <Outlet />
       </main>
     </div>
   );
