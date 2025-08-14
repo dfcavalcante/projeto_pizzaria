@@ -1,12 +1,26 @@
-# React + Vite
+Manaus Pizza - Sistema de Gestão para Pizzarias
+Aplicação front-end em React que simula um sistema de gestão para uma pizzaria, com funcionalidades para clientes e administradores.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+graph TD
+    A[Início] --> B{Tela de Login};
+    B -- Credenciais de Cliente --> C[Área do Cliente];
+    B -- Credenciais de Admin --> D[Área do Admin];
 
-Currently, two official plugins are available:
+    subgraph Área do Cliente
+        C --> C1[Ver Cardápio];
+        C1 --> C2[Adicionar ao Carrinho];
+        C2 --> C3[Finalizar Pedido];
+        C3 --> C4[Acompanhar Status do Pedido];
+        C --> C4;
+    end
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    subgraph Área do Admin
+        D --> D1[Ver Cardápio];
+        D --> D2[Painel da Cozinha];
+        D2 -- Aceitar Pedido --> D3[Mover para Preparação];
+        D3 -- Pedido Pronto --> D4[Mover para Entregas];
+        D --> D5[Painel de Entregas];
+        D5 -- Marcar como Entregue --> D6[Finalizar Pedido];
+        D --> D7[Gerenciar Cardápio];
+        D7 --> D8[Adicionar/Editar/Excluir Pizzas];
+    end

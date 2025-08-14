@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthProvider.jsx'; // Importação corrigida
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthProvider.jsx';
 
-const Login = ({ setRoute }) => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth(); // Usando o hook customizado
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Redireciona para a página que o utilizador tentou aceder ou para o cardápio
+    const from = location.state?.from?.pathname || "/cardapio";
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setError('');
         if (login(email, password)) {
-            setRoute('cardapio');
+            navigate(from, { replace: true });
         } else {
-            setError('Usuário ou senha inválidos.');
+            setError('Utilizador ou senha inválidos.');
         }
     };
 

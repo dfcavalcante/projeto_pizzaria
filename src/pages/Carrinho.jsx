@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { useData } from '../context/DataContext.jsx';
 import { useNotification } from '../context/NotificationContext.jsx';
-import { useAuth } from '../context/AuthProvider.jsx'; // Importação corrigida
+import { useAuth } from '../context/AuthProvider.jsx';
 
 const Carrinho = ({ setRoute }) => {
-    const { cartItems, removeFromCart, clearCart, total } = useCart();
+    const { cartItems, removeFromCart, clearCart, total, addToCart, decreaseQuantity } = useCart();
     const { placeOrder } = useData();
     const { showNotification } = useNotification();
-    const { user } = useAuth(); // Usando o hook centralizado
+    const { user } = useAuth();
     
     const [orderType, setOrderType] = useState('mesa');
     const [orderInfo, setOrderInfo] = useState('');
@@ -49,7 +49,6 @@ const Carrinho = ({ setRoute }) => {
     return (
         <div className="container page-container cart-page">
             <h2 className="page-title">Finalizar Pedido</h2>
-            {/* O resto do JSX permanece o mesmo... */}
             {cartItems.length === 0 ? (
                 <p>Seu carrinho está vazio.</p>
             ) : (
@@ -58,13 +57,20 @@ const Carrinho = ({ setRoute }) => {
                         <div key={`${item.id}-${item.tamanho}`} className="cart-item">
                             <div>
                                 <p className="item-name">{item.nome} ({item.tamanho})</p>
-                                <p className="item-details">Qtd: {item.quantidade} x R$ {item.preco.toFixed(2)}</p>
+                                <p className="item-details">R$ {item.preco.toFixed(2)} / un.</p>
                             </div>
-                            <button onClick={() => removeFromCart(item.id, item.tamanho)} className="cart-item-remove-button">Remover</button>
+                            {/* --- CONTROLE DE QUANTIDADE ADICIONADO AQUI --- */}
+                            <div className="quantity-control">
+                                <button onClick={() => decreaseQuantity(item.id, item.tamanho)} className="quantity-btn">-</button>
+                                <span className="quantity-text">{item.quantidade}</span>
+                                <button onClick={() => addToCart(item, item.tamanho)} className="quantity-btn">+</button>
+                                <button onClick={() => removeFromCart(item.id, item.tamanho)} className="cart-item-remove-button">Remover</button>
+                            </div>
                         </div>
                     ))}
 
                     <div className="cart-summary">
+                        {/* O resto do JSX permanece o mesmo... */}
                         <div className="cart-total">
                             <span>Total:</span>
                             <span>R$ {total.toFixed(2)}</span>

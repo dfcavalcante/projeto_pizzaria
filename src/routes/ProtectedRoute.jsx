@@ -1,21 +1,19 @@
 import React from 'react';
-import { useAuth } from '../context/AuthProvider.jsx'; // Importação corrigida
+import { useAuth } from '../context/AuthProvider.jsx';
+import { Navigate, useLocation } from 'react-router-dom';
 
-const ProtectedRoute = ({ children, role, setRoute }) => {
-    const { user } = useAuth(); // Usando o hook customizado
+const ProtectedRoute = ({ children, role }) => {
+    const { user } = useAuth();
+    const location = useLocation();
 
     if (!user) {
-        setTimeout(() => setRoute('login'), 0);
-        return <p>Redirecionando para o login...</p>;
+        // Redireciona para o login, guardando a página que o utilizador tentou aceder
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     if (role && user.role !== role) {
-        return (
-            <div className="container page-container">
-                <h2>Acesso Negado</h2>
-                <p>Você não tem permissão para visualizar esta página.</p>
-            </div>
-        );
+        // Redireciona para a página de "não encontrado" ou uma página de acesso negado
+        return <Navigate to="/cardapio" replace />;
     }
 
     return children;
